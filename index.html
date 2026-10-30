@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Trương Hữu Trí Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Concept: a type-first page. Ultramarine hero whose name reacts to the cursor, then each project takes over the screen in its own colours, stacked like cards. English is the default language; Vietnamese is one click away. */
+:root {
+  --bg: #ECEEF5;
+  --surface: #F7F8FC;
+  --ink: #0F1220;
+  --muted: #566077;
+  --line: #CDD2E0;
+  --mark: #2B2DEB;
+  --hero: #2B2DEB;
+  --hero-ink: #F5F6FF;
+  --pop: #FFE45E;
+  --display: "Bricolage Grotesque", "Be Vietnam Pro", system-ui, sans-serif;
+  --sans: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0D0F16; --surface: #141824; --ink: #ECEEF6; --muted: #98A1B5; --line: #232837; --mark: #A3A6FF; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0D0F16; --surface: #141824; --ink: #ECEEF6; --muted: #98A1B5; --line: #232837; --mark: #A3A6FF; color-scheme: dark; }
+
+/* language: English by default */
+html:not([data-lang="vi"]) .vi { display: none !important; }
+html[data-lang="vi"] .en { display: none !important; }
+.st { display: none; }
+[data-state="idle"] .st.idle, [data-state="done"] .st.done, [data-state="sel"] .st.sel { display: inline; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.65; margin: 0; padding: 0; overflow-x: clip; }
+.wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: inherit; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 3px; }
+.label { font: 500 12px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+
+/* ---------- hero ---------- */
+.hero { background: var(--hero); color: var(--hero-ink); }
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 26px; font: 500 13px/1 var(--mono); }
+.nav a { text-decoration: none; opacity: .85; }
+.nav a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 5px; }
+.nav .right { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; justify-content: flex-end; }
+.nav .links { display: flex; gap: 24px; flex-wrap: wrap; }
+.lang { display: inline-flex; border: 1.5px solid color-mix(in srgb, var(--hero-ink) 70%, transparent); border-radius: 999px; padding: 3px; }
+.lang button { font: 500 12px/1 var(--mono); border: 0; background: transparent; color: var(--hero-ink); padding: 11px 15px; min-height: 40px; border-radius: 999px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--hero-ink); color: var(--hero); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; align-items: end; padding-block: 36px 64px; }
+.name { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(3.4rem, 12.4vw, 9.4rem); line-height: .98; letter-spacing: -.035em; }
+.name .row { display: block; white-space: nowrap; }
+.name .ch { display: inline-block; white-space: pre; font-variation-settings: "wght" 600, "wdth" 86; }
+.hero .sub { max-width: 46ch; margin: 34px 0 0; font-size: 1.12rem; color: color-mix(in srgb, var(--hero-ink) 86%, var(--hero)); }
+.hero .cta { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 22px; border-radius: 999px; font: 500 14px/1 var(--mono); text-decoration: none; cursor: pointer; border: 1.5px solid currentColor; background: transparent; color: inherit; transition: transform .15s; }
+.btn:hover { transform: translateY(-2px); }
+.btn.solid { background: var(--pop); color: #14150A; border-color: var(--pop); }
+.portrait { position: relative; justify-self: end; width: 100%; max-width: 300px; }
+.portrait img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 40% 18%; border-radius: 999px 999px 22px 22px; background: #6e6e6e; }
+.sticker { position: absolute; left: -54px; bottom: 26px; width: 118px; height: 118px; border-radius: 50%; background: var(--pop); color: #14150A; display: grid; place-items: center; }
+.sticker svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 18s linear infinite; }
+.sticker text { font: 500 11.5px var(--mono); letter-spacing: .12em; fill: #14150A; }
+.sticker b { font-size: 1.5rem; line-height: 1; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ticker { overflow: hidden; border-top: 1px solid color-mix(in srgb, var(--hero-ink) 28%, transparent); padding-block: 18px; }
+.track { display: flex; width: max-content; animation: slide 34s linear infinite; font-family: var(--display); font-weight: 600; font-size: 1.5rem; letter-spacing: -.01em; white-space: nowrap; }
+.track span { padding-right: 34px; display: inline-flex; align-items: center; gap: 34px; }
+.track span::after { content: "✦"; color: var(--pop); font-size: .8em; }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* ---------- intro ---------- */
+.intro { padding-block: 112px 120px; }
+.intro p { margin: 18px 0 0; font-family: var(--display); font-weight: 500; font-size: clamp(1.7rem, 3.8vw, 3.05rem); line-height: 1.2; letter-spacing: -.02em; max-width: 30em; text-wrap: pretty; }
+.intro mark { background: none; color: var(--mark); }
+
+/* ---------- project stages ---------- */
+.stage { --pmut: color-mix(in srgb, var(--pfg) 74%, var(--pbg)); --pline: color-mix(in srgb, var(--pfg) 24%, transparent); background: var(--pbg); color: var(--pfg); border-radius: 44px 44px 0 0; margin-top: -44px; padding: 112px 0 150px; position: relative; overflow: hidden; }
+.stage:first-of-type { margin-top: 0; }
+.ghost { position: absolute; right: -1vw; top: 22px; font-family: var(--display); font-weight: 800; font-size: clamp(7rem, 20vw, 18rem); line-height: .8; letter-spacing: -.05em; color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--pfg) 16%, transparent); pointer-events: none; white-space: nowrap; user-select: none; }
+.stage .grid { position: relative; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 60px; align-items: start; }
+.stage .kind { color: var(--pacc); margin: 0 0 22px; display: block; }
+.stage h3 { margin: 0 0 26px; font-family: var(--display); font-weight: 700; font-variation-settings: "wdth" 82; font-size: clamp(2.8rem, 6.4vw, 5.4rem); line-height: .94; letter-spacing: -.035em; text-wrap: balance; }
+.stage .lead { margin: 0 0 24px; font-size: 1.1rem; color: var(--pmut); max-width: 42ch; }
+.stage ul { margin: 0 0 28px; padding: 0; list-style: none; display: grid; gap: 10px; max-width: 46ch; }
+.stage li { position: relative; padding-left: 22px; color: var(--pmut); }
+.stage li::before { content: ""; position: absolute; left: 0; top: .72em; width: 10px; height: 2px; background: var(--pacc); }
+.stage .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.stage .chip { font: 400 12px/1 var(--mono); padding: 8px 11px; border: 1px solid var(--pline); border-radius: 999px; color: var(--pmut); }
+.stage.wide .grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+.stage.wide .text { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 60px; align-items: start; }
+.stage.wide .text > * { grid-column: 1; }
+.stage.wide .text ul { grid-column: 2; grid-row: 1 / span 4; margin-top: 4px; max-width: none; }
+.stage.wide .text .chips { grid-column: 1; }
+.device { perspective: 1500px; min-width: 0; }
+.frame { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out; border-radius: 14px; overflow: hidden; background: var(--pbg); border: 1px solid var(--pline); box-shadow: 0 60px 100px -45px rgb(0 0 0 / .6), 0 0 0 6px color-mix(in srgb, var(--pfg) 7%, transparent); will-change: transform; }
+.fbar { display: flex; align-items: center; gap: 14px; padding: 11px 14px; border-bottom: 1px solid var(--pline); font: 400 12px/1 var(--mono); color: var(--pmut); background: color-mix(in srgb, var(--pfg) 6%, var(--pbg)); }
+.fbar i { width: 10px; height: 10px; border-radius: 50%; background: var(--pline); display: inline-block; margin-right: -6px; }
+.fbar i:nth-child(1) { background: color-mix(in srgb, var(--pacc) 80%, transparent); }
+.shots { aspect-ratio: var(--ar, 4 / 3); position: relative; }
+.shots img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+.shots img[hidden] { display: none; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+.tabs button { font: 500 12px/1 var(--mono); padding: 14px 16px; min-height: 44px; border-radius: 999px; border: 1px solid var(--pline); background: transparent; color: var(--pfg); cursor: pointer; }
+.tabs button:hover { border-color: var(--pfg); }
+.tabs button[aria-pressed="true"] { background: var(--pacc); border-color: var(--pacc); color: var(--pbg); }
+
+/* ---------- other work ---------- */
+.more { background: var(--bg); border-radius: 44px 44px 0 0; margin-top: -44px; position: relative; padding-block: 108px 20px; }
+.more h2, .sec h2 { margin: 14px 0 0; font-family: var(--display); font-weight: 700; font-variation-settings: "wdth" 85; font-size: clamp(2.3rem, 5.4vw, 4.2rem); line-height: 1; letter-spacing: -.03em; }
+.orows { margin-top: 48px; border-top: 1px solid var(--line); }
+.orow { display: grid; grid-template-columns: 220px minmax(0, 1fr) 40px; gap: 28px; align-items: start; padding: 30px 0; border-bottom: 1px solid var(--line); text-decoration: none; transition: padding-left .2s; }
+a.orow:hover { padding-left: 14px; }
+.orow .label { color: var(--muted); padding-top: 8px; }
+.orow h4 { margin: 0 0 8px; font-family: var(--display); font-weight: 600; font-size: clamp(1.4rem, 2.6vw, 2.1rem); line-height: 1.12; letter-spacing: -.02em; }
+.orow p { margin: 0; color: var(--muted); max-width: 62ch; }
+.orow .arrow { font-size: 1.6rem; text-align: right; color: var(--mark); }
+
+/* ---------- skills, experience ---------- */
+.sec { padding-block: 108px 0; }
+.skills { margin-top: 48px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.skills .label { color: var(--mark); display: block; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.skills ul { list-style: none; margin: 0; padding: 0; }
+.skills li { font-family: var(--display); font-weight: 600; font-size: clamp(1.3rem, 2.2vw, 1.75rem); line-height: 1.45; letter-spacing: -.015em; }
+.ai { margin-top: 56px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; padding: 34px 0; border-block: 1px solid var(--line); }
+.ai .label { color: var(--mark); padding-top: 6px; }
+.ai p { margin: 0; font-family: var(--display); font-weight: 500; font-size: clamp(1.25rem, 2.3vw, 1.8rem); line-height: 1.3; letter-spacing: -.015em; max-width: 34em; }
+.exp { margin-top: 48px; border-top: 1px solid var(--line); }
+.erow { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.erow .label { color: var(--muted); padding-top: 6px; }
+.erow h4 { margin: 0 0 4px; font-family: var(--display); font-weight: 600; font-size: 1.4rem; letter-spacing: -.015em; }
+.erow p { margin: 0; color: var(--muted); }
+
+/* ---------- contact ---------- */
+.contact { margin-top: 120px; background: var(--hero); color: var(--hero-ink); border-radius: 44px 44px 0 0; padding-block: 104px 34px; }
+.contact h2 { margin: 18px 0 0; font-family: var(--display); font-weight: 700; font-variation-settings: "wdth" 80; font-size: clamp(3rem, 10.5vw, 8.6rem); line-height: .92; letter-spacing: -.04em; text-wrap: balance; }
+.mail { margin-top: 48px; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.mail .addr { font-family: var(--display); font-weight: 600; font-size: clamp(1.3rem, 3.4vw, 2.4rem); letter-spacing: -.02em; overflow-wrap: anywhere; user-select: all; }
+.links2 { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 12px 28px; font: 500 14px/1.4 var(--mono); }
+.foot { margin-top: 96px; padding-top: 22px; border-top: 1px solid color-mix(in srgb, var(--hero-ink) 28%, transparent); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font: 400 12px/1.5 var(--mono); opacity: .85; padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
+
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; padding-block: 24px 48px; }
+  .portrait { justify-self: start; max-width: 240px; }
+  .sticker { left: auto; right: -34px; width: 104px; height: 104px; }
+  .stage { padding: 80px 0 110px; border-radius: 30px 30px 0 0; margin-top: -30px; }
+  .stage .grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .stage.wide .text { display: block; }
+  .stage.wide .text ul { margin-top: 0; }
+  .more { border-radius: 30px 30px 0 0; margin-top: -30px; padding-top: 80px; }
+  .orow { grid-template-columns: minmax(0, 1fr) 32px; gap: 8px 16px; padding: 24px 0; }
+  .orow .label { grid-column: 1 / -1; padding-top: 0; }
+  .skills { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .ai, .erow { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .intro { padding-block: 80px 88px; }
+  .sec { padding-top: 80px; }
+  .contact { border-radius: 30px 30px 0 0; padding-top: 80px; margin-top: 88px; }
+  .nav .links { gap: 16px; }
+  .nav .right { gap: 14px; }
+}
+@media (max-width: 560px) {
+  .nav { flex-wrap: wrap; row-gap: 0; padding-block: 16px 6px; }
+  .nav .right { display: contents; }
+  .lang { order: 2; }
+  .nav .links { order: 3; width: 100%; display: flex; justify-content: space-between; gap: 8px; margin-top: 12px; border-top: 1px solid color-mix(in srgb, var(--hero-ink) 28%, transparent); }
+  .nav .links a { padding: 14px 0; }
+  .name { font-size: clamp(3.4rem, 17vw, 5rem); }
+  .hero .sub { font-size: 1.05rem; margin-top: 26px; }
+  .hero .cta .btn { flex: 1 1 auto; justify-content: center; padding: 17px 20px; }
+  .stage { padding: 64px 0 96px; }
+  .stage h3 { font-size: clamp(2.6rem, 14vw, 3.6rem); }
+  .stage .lead { font-size: 1.04rem; }
+  .ghost { font-size: 6.5rem; top: 14px; }
+  .tabs { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; padding-bottom: 6px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button { flex: none; }
+  .fbar { padding: 9px 12px; }
+  .frame { box-shadow: 0 30px 50px -30px rgb(0 0 0 / .6); }
+  .intro { padding-block: 64px 72px; }
+  .mail .btn { width: 100%; justify-content: center; padding: 17px; }
+  .links2 a { padding: 8px 0; }
+  .foot { margin-top: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .track, .sticker svg { animation: none; }
+  .frame { transition: none; }
+  .btn:hover, a.orow:hover { transform: none; padding-left: 0; }
+}
+</style>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <nav class="nav" aria-label="Main">
+      <a href="#top">truonghuutri.dev</a>
+      <div class="right">
+        <div class="links"><a href="#du-an"><span class="en">projects</span><span class="vi">dự án</span></a><a href="#ky-nang"><span class="en">skills</span><span class="vi">kỹ năng</span></a><a href="#kinh-nghiem"><span class="en">experience</span><span class="vi">kinh nghiệm</span></a><a href="#lien-he"><span class="en">contact</span><span class="vi">liên hệ</span></a></div>
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" data-set="en" aria-pressed="true">EN</button>
+          <button type="button" data-set="vi" aria-pressed="false">VI</button>
+        </div>
+      </div>
+    </nav>
+    <div class="hero-grid">
+      <div>
+        <h1 class="name" id="name" aria-label="Trương Hữu Trí"><span class="row" aria-hidden="true">Trương</span><span class="row" aria-hidden="true">Hữu Trí</span></h1>
+        <p class="sub"><span class="en">Web developer based in Ho Chi Minh City. I build online stores, AI and game web apps, and systems for game servers.</span><span class="vi">Lập trình viên web ở TP. Hồ Chí Minh. Mình làm cửa hàng online, web app AI và game, và hệ thống cho server game.</span></p>
+        <div class="cta">
+          <a class="btn solid" href="#du-an"><span class="en">View projects ↓</span><span class="vi">Xem dự án ↓</span></a>
+          <a class="btn" href="https://github.com/truonghuutri290802" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+      <div class="portrait">
+        <img alt="Portrait of Trương Hữu Trí" data-alt-en="Portrait of Trương Hữu Trí" data-alt-vi="Chân dung Trương Hữu Trí" src="images/portrait.jpg">
+        <div class="sticker" role="img" aria-label="Open to work">
+          <svg viewBox="0 0 118 118" aria-hidden="true"><defs><path id="circ" d="M59,59 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+            <text class="en"><textPath href="#circ">OPEN TO WORK • OPEN TO WORK • </textPath></text>
+            <text class="vi"><textPath href="#circ">ĐANG TÌM VIỆC • ĐANG TÌM VIỆC • </textPath></text></svg>
+          <b aria-hidden="true">✦</b>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ticker" aria-hidden="true">
+    <div class="track">
+      <span>Python</span><span>Node.js</span><span>C#</span><span>WordPress</span><span>WooCommerce</span><span>SQL</span><span><span class="en">Game systems</span><span class="vi">Hệ thống game</span></span><span><span class="en">AI-assisted coding</span><span class="vi">Lập trình với AI</span></span>
+      <span>Python</span><span>Node.js</span><span>C#</span><span>WordPress</span><span>WooCommerce</span><span>SQL</span><span><span class="en">Game systems</span><span class="vi">Hệ thống game</span></span><span><span class="en">AI-assisted coding</span><span class="vi">Lập trình với AI</span></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="intro">
+    <div class="wrap">
+      <span class="label" style="color:var(--muted)"><span class="en">About</span><span class="vi">Giới thiệu</span></span>
+      <p><span class="en">I build <mark>online stores</mark>, <mark>AI and game web apps</mark>, and NPC and boss systems for a Minecraft server. I use AI to move fast, then read, check and test everything before I ship it.</span><span class="vi">Mình xây <mark>cửa hàng online</mark>, <mark>web app AI và game</mark>, và hệ thống NPC, Boss cho server Minecraft. Mình dùng AI để đi nhanh, rồi tự đọc, kiểm tra và test trước khi giao.</span></p>
+    </div>
+  </section>
+
+  <section id="du-an" aria-label="Projects">
+    <!-- Bora AI -->
+    <article class="stage" style="--pbg:#130A22; --pfg:#EFE8FA; --pacc:#FF6FB5;">
+      <div class="ghost" aria-hidden="true">Bora</div>
+      <div class="wrap">
+        <div class="grid">
+          <div class="text">
+            <span class="label kind"><span class="en">AI platform · Web app</span><span class="vi">Nền tảng AI · Web app</span></span>
+            <h3>Bora AI</h3>
+            <p class="lead"><span class="en">An AI creative platform that turns a short idea into images, videos and written content.</span><span class="vi">Nền tảng sáng tạo bằng AI biến một ý tưởng ngắn thành hình ảnh, video và nội dung viết.</span></p>
+            <ul>
+              <li><span class="en">Landing page with a prompt box that generates an image from a short description.</span><span class="vi">Trang chủ có ô nhập mô tả để tạo ảnh ngay từ một câu ngắn.</span></li>
+              <li><span class="en">Style library with eight collections: Cinematic, Anime, Hyper-realistic, Artistic, Cyberpunk, Surreal, Fashion and Product.</span><span class="vi">Thư viện phong cách gồm tám bộ: Cinematic, Anime, Hyper-realistic, Artistic, Cyberpunk, Surreal, Fashion và Product.</span></li>
+              <li><span class="en">Content generator with chat AI (OpenAI or Google) and a three-step guide from idea to result.</span><span class="vi">Công cụ tạo nội dung bằng chat AI (OpenAI hoặc Google), kèm hướng dẫn ba bước từ ý tưởng đến kết quả.</span></li>
+              <li><span class="en">Image-to-video flow: upload a source image, write a prompt, pick a model, add LoRA or ControlNet and get the video.</span><span class="vi">Luồng ảnh tạo video: tải ảnh nguồn, nhập prompt, chọn model, thêm LoRA hoặc ControlNet rồi nhận video.</span></li>
+              <li><span class="en">Pages for plans and payment, about us and a gallery carousel.</span><span class="vi">Có trang gói và thanh toán, giới thiệu và băng chuyền hình ảnh.</span></li>
+            </ul>
+            <div class="chips"><span class="chip"><span class="en">AI platform</span><span class="vi">Nền tảng AI</span></span><span class="chip">Text-to-image</span><span class="chip">Image-to-video</span><span class="chip">GPT content</span></div>
+          </div>
+          <div class="device view">
+            <div class="frame">
+              <div class="fbar"><span><i></i><i></i><i></i></span><span class="wt" data-base="bora-ai">bora-ai / home</span></div>
+              <div class="shots">
+                <img data-ar="1400 / 601" src="images/bora-home.jpg" alt="Bora AI home page with a prompt box over a motorcycle scene" data-alt-en="Bora AI home page with a prompt box over a motorcycle scene" data-alt-vi="Trang chủ Bora AI với ô nhập mô tả trên nền cảnh xe mô tô">
+                <img hidden data-ar="1400 / 554" src="images/bora-styles.jpg" alt="Style library with eight portrait collections" data-alt-en="Style library with eight portrait collections" data-alt-vi="Thư viện phong cách với tám bộ ảnh chân dung">
+                <img hidden data-ar="6 / 5" src="images/bora-content.jpg" alt="Content generator with a chat AI flow and a three-step guide" data-alt-en="Content generator with a chat AI flow and a three-step guide" data-alt-vi="Công cụ tạo nội dung với luồng chat AI và hướng dẫn ba bước">
+                <img hidden data-ar="1076 / 872" src="images/bora-video.jpg" alt="Image-to-video tool with model selection, prompt box and result" data-alt-en="Image-to-video tool with model selection, prompt box and result" data-alt-vi="Công cụ ảnh tạo video với chọn model, ô prompt và kết quả">
+                <img hidden data-ar="1240 / 822" src="images/bora-about.jpg" alt="About section with a gallery carousel and site footer" data-alt-en="About section with a gallery carousel and site footer" data-alt-vi="Phần giới thiệu với băng chuyền hình ảnh và chân trang">
+              </div>
+            </div>
+            <div class="tabs">
+              <button type="button" aria-pressed="true" data-t="home"><span class="en">Home</span><span class="vi">Trang chủ</span></button>
+              <button type="button" aria-pressed="false" data-t="styles"><span class="en">Styles</span><span class="vi">Phong cách</span></button>
+              <button type="button" aria-pressed="false" data-t="content"><span class="en">Content</span><span class="vi">Nội dung</span></button>
+              <button type="button" aria-pressed="false" data-t="video">Video</button>
+              <button type="button" aria-pressed="false" data-t="about"><span class="en">About</span><span class="vi">Giới thiệu</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Scentiful -->
+    <article class="stage" style="--pbg:#C7DBD0; --pfg:#17261B; --pacc:#2F5A3B;">
+      <div class="ghost" aria-hidden="true">Scentiful</div>
+      <div class="wrap">
+        <div class="grid">
+          <div class="text">
+            <span class="label kind"><span class="en">Online store · WordPress</span><span class="vi">Web bán hàng · WordPress</span></span>
+            <h3>Scentiful</h3>
+            <p class="lead"><span class="en">An online store for a personal-care brand: shoe deodorant sprays, moisturising perfumes, and skin, hair, home and body care.</span><span class="vi">Cửa hàng trực tuyến cho thương hiệu chăm sóc cá nhân: xịt khử mùi, nước hoa dưỡng ẩm, chăm sóc da, tóc, nhà cửa và dưỡng thể.</span></p>
+            <ul>
+              <li><span class="en">Home page with a banner, a product list and four main categories.</span><span class="vi">Trang chủ có banner, danh sách sản phẩm và bốn danh mục lớn.</span></li>
+              <li><span class="en">Original price, sale price and a Sale badge on each product.</span><span class="vi">Hiển thị giá gốc, giá khuyến mãi và nhãn Sale trên từng sản phẩm.</span></li>
+              <li><span class="en">Menus for products, blog and contact, plus login and cart.</span><span class="vi">Menu sản phẩm, blog, liên hệ, đăng nhập và giỏ hàng.</span></li>
+            </ul>
+            <div class="chips"><span class="chip">WordPress</span><span class="chip">WooCommerce</span></div>
+          </div>
+          <div class="device view">
+            <div class="frame">
+              <div class="fbar"><span><i></i><i></i><i></i></span><span class="wt" data-base="scentiful">scentiful / home</span></div>
+              <div class="shots">
+                <img data-ar="1093 / 862" src="images/scentiful-home.jpg" alt="Scentiful home page with a banner of shoe deodorant sprays" data-alt-en="Scentiful home page with a banner of shoe deodorant sprays" data-alt-vi="Trang chủ cửa hàng Scentiful với banner các chai xịt khử mùi giày">
+                <img hidden data-ar="1100 / 866" src="images/scentiful-products.jpg" alt="Product list with Sale badges and four product categories" data-alt-en="Product list with Sale badges and four product categories" data-alt-vi="Danh sách sản phẩm có nhãn Sale và bốn danh mục sản phẩm">
+              </div>
+            </div>
+            <div class="tabs"><button type="button" aria-pressed="true" data-t="home"><span class="en">Home</span><span class="vi">Trang chủ</span></button><button type="button" aria-pressed="false" data-t="products"><span class="en">Products</span><span class="vi">Sản phẩm</span></button></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- AquaPilot -->
+    <article class="stage wide" style="--pbg:#051419; --pfg:#DDF7F3; --pacc:#1EE6C3;">
+      <div class="ghost" aria-hidden="true">Aqua</div>
+      <div class="wrap">
+        <div class="grid">
+          <div class="text">
+            <span class="label kind"><span class="en">Web app · Game</span><span class="vi">Web app · Game</span></span>
+            <h3>AquaPilot</h3>
+            <p class="lead"><span class="en">A deep-sea fish-keeping game as a web app. Players manage their tanks, breed fish, complete quests and buy items.</span><span class="vi">Web app game nuôi cá dưới biển sâu. Người chơi quản lý bể, nhân giống, làm nhiệm vụ và mua vật phẩm.</span></p>
+            <ul>
+              <li><span class="en">Dashboard tracking water quality, oxygen, temperature and tank capacity.</span><span class="vi">Bảng điều khiển theo dõi chất lượng nước, oxy, nhiệt độ và sức chứa của bể.</span></li>
+              <li><span class="en">Aquarium view with swimming fish and jellyfish, light beams and bubbles.</span><span class="vi">Màn hình bể cá với cá và sứa chuyển động, tia sáng và bong bóng.</span></li>
+              <li><span class="en">Shop with tabs for eggs, decorations, supplies and premium packs, each with a rarity label.</span><span class="vi">Cửa hàng chia theo tab trứng, đồ trang trí, vật phẩm và gói cao cấp, có nhãn độ hiếm.</span></li>
+              <li><span class="en">Full menu: collection, marketplace, breeding, quests and leaderboard.</span><span class="vi">Menu đầy đủ: bộ sưu tập, chợ, nhân giống, nhiệm vụ, bảng xếp hạng.</span></li>
+            </ul>
+            <div class="chips"><span class="chip">Web app</span><span class="chip">Game UI</span><span class="chip"><span class="en">Dark theme</span><span class="vi">Giao diện tối</span></span><span class="chip"><span class="en">Built with AI (Lovable)</span><span class="vi">Dựng với AI (Lovable)</span></span></div>
+          </div>
+          <div class="device view">
+            <div class="frame">
+              <div class="fbar"><span><i></i><i></i><i></i></span><span class="wt" data-base="aquapilot">aquapilot / dashboard</span></div>
+              <div class="shots">
+                <img data-ar="1400 / 630" src="images/aquapilot-dashboard.jpg" alt="AquaPilot dashboard with tank stats, quick inventory and glowing creatures" data-alt-en="AquaPilot dashboard with tank stats, quick inventory and glowing creatures" data-alt-vi="Bảng điều khiển AquaPilot với thông số bể cá, túi đồ nhanh và các sinh vật phát sáng">
+                <img hidden data-ar="1400 / 630" src="images/aquapilot-aquarium.jpg" alt="Deep aquarium with swimming fish and jellyfish and temperature, pH and depth readings" data-alt-en="Deep aquarium with swimming fish and jellyfish and temperature, pH and depth readings" data-alt-vi="Màn hình bể cá sâu với cá và sứa chuyển động, các chỉ số nhiệt độ, pH và độ sâu">
+                <img hidden data-ar="1400 / 630" src="images/aquapilot-shop.jpg" alt="Shop selling egg packs and items, sorted by rarity" data-alt-en="Shop selling egg packs and items, sorted by rarity" data-alt-vi="Cửa hàng bán gói trứng và vật phẩm, chia theo độ hiếm">
+              </div>
+            </div>
+            <div class="tabs"><button type="button" aria-pressed="true" data-t="dashboard"><span class="en">Dashboard</span><span class="vi">Bảng điều khiển</span></button><button type="button" aria-pressed="false" data-t="aquarium"><span class="en">Aquarium</span><span class="vi">Bể cá</span></button><button type="button" aria-pressed="false" data-t="shop"><span class="en">Shop</span><span class="vi">Cửa hàng</span></button></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Game server site -->
+    <article class="stage" style="--pbg:#17100A; --pfg:#F3E6D3; --pacc:#F0B866;">
+      <div class="ghost" aria-hidden="true">Server</div>
+      <div class="wrap">
+        <div class="grid">
+          <div class="text">
+            <span class="label kind"><span class="en">Website · Game · Korean</span><span class="vi">Web · Game · Tiếng Hàn</span></span>
+            <h3><span class="en">Game server website</span><span class="vi">Website server game</span></h3>
+            <p class="lead"><span class="en">A landing site for a game server, written in Korean, with a language switch and a Play now button at the top.</span><span class="vi">Trang giới thiệu một server game bằng tiếng Hàn, có nút chuyển ngôn ngữ và nút Chơi ngay ở đầu trang.</span></p>
+            <ul>
+              <li><span class="en">Sections for the game world, spirit beasts, launch rewards, dungeons, the two factions and media.</span><span class="vi">Giới thiệu thế giới game, linh thú, phần thưởng ra mắt, dungeon, hai phe và media.</span></li>
+              <li><span class="en">Spirit beast section with selectable cards, artwork and stat bars.</span><span class="vi">Mục linh thú có thẻ chọn, ảnh minh họa và thanh chỉ số.</span></li>
+              <li><span class="en">Dark UI with gold tones that fits the fantasy mood.</span><span class="vi">Giao diện tối tông vàng đồng hợp với không khí fantasy.</span></li>
+            </ul>
+            <div class="chips"><span class="chip">Landing page</span><span class="chip">Game UI</span><span class="chip"><span class="en">Multilingual</span><span class="vi">Đa ngôn ngữ</span></span></div>
+          </div>
+          <div class="device view">
+            <div class="frame">
+              <div class="fbar"><span><i></i><i></i><i></i></span><span class="wt" data-base="game-server">game-server / home</span></div>
+              <div class="shots">
+                <img data-ar="857 / 622" src="images/gameserver-home.jpg" alt="Korean game server home page with a Play now button" data-alt-en="Korean game server home page with a Play now button" data-alt-vi="Trang chủ website server game bằng tiếng Hàn với nút Chơi ngay">
+                <img hidden data-ar="862 / 712" src="images/gameserver-spirit-beasts.jpg" alt="Spirit beast section with selectable cards and stat bars, dungeon section below" data-alt-en="Spirit beast section with selectable cards and stat bars, dungeon section below" data-alt-vi="Mục linh thú với danh sách chọn và thanh chỉ số, bên dưới là mục dungeon">
+              </div>
+            </div>
+            <div class="tabs"><button type="button" aria-pressed="true" data-t="home"><span class="en">Home</span><span class="vi">Trang chủ</span></button><button type="button" aria-pressed="false" data-t="spirit-beasts"><span class="en">Spirit beasts</span><span class="vi">Linh thú</span></button></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="more">
+      <div class="wrap">
+        <span class="label" style="color:var(--muted)"><span class="en">Other work</span><span class="vi">Công việc khác</span></span>
+        <h2><span class="en">More</span><span class="vi">Ngoài ra</span></h2>
+        <div class="orows">
+          <div class="orow"><span class="label">Senden · 5/2025 – 2/2026</span><div><h4><span class="en">NPC and boss systems for a Minecraft server</span><span class="vi">Hệ thống NPC và Boss cho server Minecraft</span></h4><p><span class="en">Created skins, models and behaviours for characters, balanced combat power, skills and difficulty, optimised server features, and tested and tuned gameplay from player feedback.</span><span class="vi">Tạo skin, model và hành vi cho nhân vật, cân bằng chỉ số sức mạnh, kỹ năng và độ khó, tối ưu tính năng server, kiểm thử và chỉnh gameplay theo phản hồi người chơi.</span></p></div><span></span></div>
+          <div class="orow"><span class="label">Senden · 5/2025 – 2/2026</span><div><h4><span class="en">Websites and web apps for the company</span><span class="vi">Website và web-app cho công ty</span></h4><p><span class="en">Built with Python, Node.js, C# and WordPress, working with the design team to match the design.</span><span class="vi">Lập trình bằng Python, Node.js, C# và WordPress, làm việc cùng bộ phận thiết kế để ra đúng bản thiết kế.</span></p></div><span></span></div>
+          <a class="orow" href="https://github.com/truonghuutri290802" target="_blank" rel="noopener"><span class="label">GitHub</span><div><h4><span class="en">Personal projects and exercises</span><span class="vi">Dự án cá nhân và bài tập</span></h4><p>github.com/truonghuutri290802</p></div><span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="ky-nang" aria-labelledby="h-kn">
+    <div class="wrap">
+      <span class="label" style="color:var(--muted)"><span class="en">Toolbox</span><span class="vi">Công cụ</span></span>
+      <h2 id="h-kn"><span class="en">Skills</span><span class="vi">Kỹ năng</span></h2>
+      <div class="skills">
+        <div><span class="label">Web</span><ul><li>HTML, CSS</li><li>PHP, WordPress</li><li>Elementor, WooCommerce</li><li>Node.js</li></ul></div>
+        <div><span class="label"><span class="en">Languages</span><span class="vi">Ngôn ngữ</span></span><ul><li>Python</li><li>Java</li><li>C++</li><li>C#</li></ul></div>
+        <div><span class="label"><span class="en">Data</span><span class="vi">Dữ liệu</span></span><ul><li>SQL, MySQL</li><li>Pandas, NumPy</li><li>Matplotlib, Seaborn</li><li>Scikit-learn</li></ul></div>
+      </div>
+      <div class="ai"><span class="label"><span class="en">AI-assisted coding</span><span class="vi">Lập trình với AI</span></span><p><span class="en">I use AI tools to sketch, write quickly and debug code, then read, check and test everything before I use it.</span><span class="vi">Mình dùng công cụ AI để phác thảo, viết nhanh và gỡ lỗi code, rồi đọc hiểu, kiểm tra và test lại trước khi sử dụng.</span></p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="kinh-nghiem" aria-labelledby="h-kinh">
+    <div class="wrap">
+      <span class="label" style="color:var(--muted)"><span class="en">Journey</span><span class="vi">Hành trình</span></span>
+      <h2 id="h-kinh"><span class="en">Experience</span><span class="vi">Kinh nghiệm</span></h2>
+      <div class="exp">
+        <div class="erow"><span class="label">5/2025 – 2/2026</span><div><h4><span class="en">Developer · Senden Co., Ltd</span><span class="vi">Lập trình viên · Công ty TNHH Senden</span></h4><p><span class="en">Built websites, web apps and systems for a Minecraft game server.</span><span class="vi">Lập trình website, web-app và hệ thống cho server game Minecraft.</span></p></div></div>
+        <div class="erow"><span class="label">4/2024 – 1/2025</span><div><h4><span class="en">Computer store staff, WG</span><span class="vi">Nhân viên cửa hàng máy tính WG</span></h4><p><span class="en">Installed and configured operating systems, diagnosed and fixed technical problems, managed parts inventory.</span><span class="vi">Cài đặt và cấu hình hệ điều hành, chẩn đoán và khắc phục sự cố kỹ thuật, quản lý tồn kho linh kiện.</span></p></div></div>
+        <div class="erow"><span class="label">2020 – 2026</span><div><h4><span class="en">Ho Chi Minh City University of Industry (IUH)</span><span class="vi">Đại học Công nghiệp TP.HCM (IUH)</span></h4><p><span class="en">Faculty of Data Science.</span><span class="vi">Khoa Khoa học Dữ liệu.</span></p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="lien-he" aria-labelledby="h-lh">
+    <div class="wrap">
+      <span class="label"><span class="en">Contact</span><span class="vi">Liên hệ</span></span>
+      <h2 id="h-lh"><span class="en">Let's work together?</span><span class="vi">Làm việc cùng mình?</span></h2>
+      <div class="mail">
+        <span class="addr" id="mail">huutri2002.cr@gmail.com</span>
+        <button class="btn solid" type="button" id="copy" data-state="idle">
+          <span class="st idle en">Copy email</span><span class="st idle vi">Sao chép email</span>
+          <span class="st done en">Copied</span><span class="st done vi">Đã chép</span>
+          <span class="st sel en">Email selected</span><span class="st sel vi">Đã chọn email</span>
+        </button>
+      </div>
+      <div class="links2">
+        <a href="https://github.com/truonghuutri290802" target="_blank" rel="noopener">GitHub ↗</a>
+        <span><span class="en">Thu Duc, Ho Chi Minh City</span><span class="vi">Thủ Đức, TP. Hồ Chí Minh</span></span>
+      </div>
+      <div class="foot"><span>Trương Hữu Trí</span><span><span class="en">Open to work</span><span class="vi">Đang tìm việc</span></span></div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- language (English is the default) ---- */
+  var langBtns = document.querySelectorAll('.lang button');
+  function setLang(l, save) {
+    if (l !== 'vi') l = 'en';
+    root.setAttribute('data-lang', l); root.lang = l;
+    langBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-set') === l ? 'true' : 'false'); });
+    document.querySelectorAll('img[data-alt-en]').forEach(function (im) { im.alt = im.getAttribute('data-alt-' + l); });
+    if (save) { try { localStorage.setItem('lang', l); } catch (e) {} }
+  }
+  var start = 'en';
+  try { if (localStorage.getItem('lang') === 'vi') start = 'vi'; } catch (e) {}
+  setLang(start, false);
+  langBtns.forEach(function (b) { b.addEventListener('click', function () { setLang(b.getAttribute('data-set'), true); }); });
+
+  /* ---- cursor-reactive name ---- */
+  var name = document.getElementById('name');
+  var chars = [];
+  name.querySelectorAll('.row').forEach(function (row) {
+    var text = row.textContent; row.textContent = '';
+    for (var i = 0; i < text.length; i++) {
+      var s = document.createElement('span'); s.className = 'ch'; s.textContent = text[i];
+      row.appendChild(s); chars.push({ el: s, t: 0 });
+    }
+  });
+  var ptr = { x: 0, y: 0, at: -1e9 };
+  var hero = document.getElementById('top');
+  hero.addEventListener('pointermove', function (e) { if (e.pointerType === 'touch') return; ptr.x = e.clientX; ptr.y = e.clientY; ptr.at = performance.now(); });
+  hero.addEventListener('pointerleave', function () { ptr.at = -1e9; });
+  var visible = true;
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(hero);
+  function paint(c, t) { c.el.style.fontVariationSettings = '"wght" ' + Math.round(300 + 500 * t) + ', "wdth" ' + Math.round(76 + 24 * t); }
+  if (reduce) { chars.forEach(function (c) { paint(c, .55); }); }
+  else {
+    (function frame(now) {
+      if (visible) {
+        var live = now - ptr.at < 2200;
+        var rects = chars.map(function (c) { return c.el.getBoundingClientRect(); });
+        chars.forEach(function (c, i) {
+          var target;
+          if (live) {
+            var r = rects[i], dx = ptr.x - (r.left + r.width / 2), dy = ptr.y - (r.top + r.height / 2);
+            target = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 230);
+          } else target = .5 + .5 * Math.sin(now / 750 - i * .55);
+          c.t += (target - c.t) * .14;
+          paint(c, c.t);
+        });
+      }
+      requestAnimationFrame(frame);
+    })(performance.now());
+  }
+
+  /* ---- screenshot tabs + tilt ---- */
+  document.querySelectorAll('.view').forEach(function (v) {
+    var shots = v.querySelector('.shots');
+    var imgs = v.querySelectorAll('.shots img'), tabs = v.querySelectorAll('.tabs button'), title = v.querySelector('.wt');
+    shots.style.setProperty('--ar', imgs[0].getAttribute('data-ar'));
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () {
+        imgs.forEach(function (im, j) { im.hidden = j !== i; });
+        shots.style.setProperty('--ar', imgs[i].getAttribute('data-ar'));
+        tabs.forEach(function (x) { x.setAttribute('aria-pressed', x === t ? 'true' : 'false'); });
+        title.textContent = title.getAttribute('data-base') + ' / ' + t.getAttribute('data-t');
+      });
+    });
+    if (!reduce) {
+      var frame = v.querySelector('.frame');
+      v.addEventListener('pointermove', function (e) {
+        if (e.pointerType === 'touch') return;
+        var r = v.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+        frame.style.setProperty('--ry', (px * 9).toFixed(2) + 'deg'); frame.style.setProperty('--rx', (-py * 7).toFixed(2) + 'deg');
+      });
+      v.addEventListener('pointerleave', function () { frame.style.setProperty('--ry', '0deg'); frame.style.setProperty('--rx', '0deg'); });
+    }
+  });
+
+  /* ---- copy email ---- */
+  var cb = document.getElementById('copy'), mail = document.getElementById('mail');
+  function state(s) { cb.setAttribute('data-state', s); if (s !== 'idle') setTimeout(function () { cb.setAttribute('data-state', 'idle'); }, 1700); }
+  cb.addEventListener('click', function () {
+    function fallback() { try { var r = document.createRange(); r.selectNodeContents(mail); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); state('sel'); } catch (e) {} }
+    try { navigator.clipboard.writeText(mail.textContent.trim()).then(function () { state('done'); }, fallback); } catch (e) { fallback(); }
+  });
+})();
+</script>
+
+</html>
